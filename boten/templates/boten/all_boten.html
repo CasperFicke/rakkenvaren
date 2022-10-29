@@ -1,0 +1,36 @@
+<!-- rakken/templates/rakken/all_boten.html -->
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ title|title }}{% endblock title %}
+
+{% block css_files %} 
+{% endblock css_files%}
+
+{% block content %}
+  {% include 'includes/breadcrumb.html' %}
+  <div class="container">
+    <table class="table table-striped table-sm table-bordered table-hover">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">Naam</th>
+          <th scope="col">Model</th>
+          <th scope="col">GPH</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% if boten_list %}
+          {% for boot in page_obj %}
+            <tr>
+              <th scope="row"><a href="{{ boot.get_absolute_url }}">{{boot.naam}}</a></th>
+              <td>{{ boot.model }}</td>
+              <td>{{ boot.gph }}</td>
+            </tr>
+          {% endfor %}  
+        {% endif %}
+      </tbody>
+    </table>
+    {% include 'includes/pagina_nav.html' %}
+  </div>
+{% endblock content %}

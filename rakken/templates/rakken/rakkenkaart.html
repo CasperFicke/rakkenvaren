@@ -1,0 +1,24 @@
+<!-- rakken/templates/rakken/rakkenkaart.html -->
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} {{ title }} {% endblock title %}
+{% block content %}
+ 
+  {% include 'includes/breadcrumb.html' %}
+  <div class="container">
+    <div class="row mt-4">
+      <div class="col-md-2">
+        <h4>Waypoints</h4>
+       {% for waypoint in waypoints %}
+       {{ waypoint.naam|capfirst }}<br>
+       {% endfor %}
+      </div>
+      <div class="col-md-10">
+        {{ map |safe }}
+      </div>
+    </div>
+    <br>
+  </div>
+{% endblock content %}

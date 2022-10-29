@@ -1,0 +1,83 @@
+<!-- rakken/templates/rakken/index_rakken.html -->
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ title|title }}{% endblock title %}
+
+{% block css_files %}
+  
+{% endblock css_files%}
+
+{% block content %}
+  {% include 'includes/breadcrumb.html' %}
+  <div class="container">
+    <div class="row mt-4">
+      <div class="card">
+        <div class="card-header bg-info text-white">
+          Rakkenbeheer
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-4 mb-4">
+              <a class="text-decoration-none text-dark" href="{% url 'rakken:all-waypoints' %}">
+                <div class="card my-card shadow text-center p-3">
+                  <h4>Waypoints <i class="fas fa-globe"></i></h4>
+                </div>
+              </a>
+            </div>
+            <div class="col-md-4 mb-4">
+              <a class="text-decoration-none text-dark" href="{% url 'rakken:all-rakken' %}">
+                <div class="card my-card shadow text-center p-3">
+                  <h4>Rakken <i class="fas fa-clone"></i></h4>
+                </div>
+              </a>
+            </div>
+            <div class="col-md-4 mb-4">
+              <a class="text-decoration-none text-dark" href="{% url 'rakken:rakkenkaart' %}">
+                <div class="card my-card shadow text-center p-3">
+                  <h4>Rakkenkaart <i class="fas fa-clone"></i></h4>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 mb-4">
+            <a class="text-decoration-none text-dark" href="{% url 'rakken:all-boten' %}">
+              <div class="card my-card shadow text-center p-3">
+                <h4>Boten <i class="fas fa-globe"></i></h4>
+              </div>
+            </a>
+          </div>
+          <div class="col-md-4 mb-4">
+            <a class="text-decoration-none text-dark" href="{% url 'rakken:all-rakscore' %}">
+              <div class="card my-card shadow text-center p-3">
+                <h4>Rakscore <i class="fas fa-clone"></i></h4>
+              </div>
+            </a>
+          </div>
+          <div class="col-md-4 mb-4">
+            <a class="text-decoration-none text-dark" href="{% url 'rakken:rakscorekaart' %}">
+              <div class="card my-card shadow text-center p-3">
+                <h4>Rakscorekaart <i class="fas fa-clone"></i></h4>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header bg-info text-white">
+          Weer
+        </div>
+        <div class="card-body">
+          <div class="row">
+            Windkracht {{ weer.windkracht }} knopen <br>
+            Windrichting {{ weer.windrichting }} °
+          </div>
+        </div>
+      </div>
+    </div>
+    <br><br>
+  </div>
+{% endblock content %}

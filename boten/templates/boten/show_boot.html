@@ -1,0 +1,64 @@
+<!-- rakken/templates/rakken/show_boot.html -->
+
+{% extends 'base.html' %}
+
+{% block title %} {{ title|title }} {% endblock title %}
+{% block content %}
+  <!-- ***** Breadcrumb Area Start ***** -->
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <a href="{% url 'index' %}"><i class="fa fa-home"></i> Home</a> / <a href="{% url 'rakken:all-boten' %}"> Boten</a> / {{ boot.naam }}
+      </div>
+      <hr>
+    </div>
+  </div>
+  <!-- ***** Breadcrumb Area End ***** -->
+  <div class="container">
+    <div class="card">
+      <div class="card-header">
+        <strong>Server: {{ boot.naam }}</strong>
+      </div>
+      <div class="card-body">
+        <h5 class="card-title"></h5>
+        <p class="card-text">
+          <div class='row'>
+            <div class='col-md-6'>
+              <dl class="row">
+                <dt class="col-sm-4">Naam: </dt>
+                <dd class="col-sm-8">{{ boot.naam }}</dd>
+                <dt class="col-sm-4">Model:</dt>
+                <dd class="col-sm-8">{{ boot.model }}</dd>
+              </dl>
+              {{ data|safe }}
+            <a href="{% url 'rakken:all-boten' %}" class="btn btn-secondary">Terug</a>
+          </div>
+          <div class='col-md-6'>
+            <strong>Polar:</strong>
+            <table class="table table-sm table-bordered table-hover">
+              <thead class="thead-light">
+                <tr>
+                  <th scope="col">windspeed</th>
+                  <th scope="col">TWA</th>
+                  <th scope="col">boatspeed</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for polarpunt in boot.polarpunten.all %}   
+                  <tr>
+                    <th>{{ polarpunt.windspeed }}</th>
+                    <td>{{ polarpunt.twa }}</a></td>
+                    <td>{{ polarpunt.boatspeed }}</a></td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+            <br>
+          </div>
+          <br>
+        </p>
+      </div>
+    </div>
+    <br>
+  </div>
+{% endblock content %}

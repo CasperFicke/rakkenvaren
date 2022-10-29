@@ -1,0 +1,19 @@
+<!-- rakken/templates/rakken/rakscorekaart.html -->
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} {{ title }} {% endblock title %}
+{% block content %}
+ 
+  {% include 'includes/breadcrumb.html' %}
+  <div class="container">
+    <div class="row mt-4">
+      <h4>Weer</h4>
+      Windkracht {{ weer.windkracht }} knopen <br>
+      Windrichting {{ weer.windrichting }} °
+      {{ map |safe }}
+    </div>
+    <br>
+  </div>
+{% endblock content %}

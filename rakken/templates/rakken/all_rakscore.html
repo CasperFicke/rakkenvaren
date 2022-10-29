@@ -1,0 +1,53 @@
+<!-- rakken/templates/rakken/all_rakscore.html -->
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ title|title }}{% endblock title %}
+
+{% block css_files %} 
+{% endblock css_files%}
+
+{% block content %}
+  {% include 'includes/breadcrumb.html' %}
+  <div class="container">
+    <h4>Weer</h4>
+    Windkracht {{ weer.windkracht }} knopen <br>
+    Windrichting {{ weer.windrichting }} °
+    <table class="table table-sm table-bordered table-hover">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">Evenement</th>
+          <th scope="col">Type</th>
+          <th scope="col">Waypoint 1</th>
+          <th scope="col">Waypoint 2</th>
+          <th scope="col">Lengte </th>
+          <th scope="col">Afstand </th>
+          <th scope="col">Bearing</th>
+          <th scope="col">TWA</th>
+          <th scope="col">Score</th>
+          
+        </tr>
+      </thead>
+      <tbody>
+        {% if rakscore_list %}
+          {% for rakscore in page_obj %}
+            <tr>
+              <td>{{ rakscore.rak.evenement }}</td>
+              <td>{{ rakscore.rak.type }}</td>
+              <td>{{ rakscore.waypoint1.naam }}</td>
+              <td>{{ rakscore.waypoint2.naam }}</td>
+              <td>{{ rakscore.rak.lengte }}</td>
+              <td>{{ rakscore.rak.afstand }}</td>
+              <td class="{{ rakscore.color }}">{{ rakscore.bearing }}</td>
+              <td class="{{ rakscore.color }}">{{ rakscore.twa }}</td>
+              <td class="{{ rakscore.color }}">{{ rakscore.score }}</td>
+              
+            </tr>
+          {% endfor %}  
+        {% endif %}
+      </tbody>
+    </table>
+    {% include 'includes/pagina_nav.html' %}
+  </div>
+{% endblock content %}
