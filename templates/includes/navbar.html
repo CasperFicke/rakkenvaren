@@ -12,22 +12,27 @@
   <div class="collapse navbar-collapse" id="navbarNavDropdown">
     <!-- Linkerkant van de Navbar -->
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'site-basis:home' %}">Home </a>
-      </li> 
+      <li class="nav-item"><a class="nav-link" href="{% url 'site-basis:home' %}">Home </a></li>
+      <li class="nav-item"><a class="nav-link" href="{% url 'rakken:all-waypoints' %}">Waypoints</a></li>
       <!-- Rakken menu -->
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-        Rakken</a>
-        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-          <li><a class="dropdown-item" href="{% url 'rakken:index-rakken' %}">Index</a></li>
-          <li><a class="dropdown-item" href="{% url 'rakken:all-waypoints' %}">Waypoints</a></li>
-          <li><a class="dropdown-item" href="{% url 'rakken:all-rakken' %}">Rakken</a></li>
-          <li><a class="dropdown-item" href="{% url 'rakken:rakkenkaart' %}">Rakken-kaart</a></li>
-          <li><a class="dropdown-item" href="{% url 'rakken:all-rakscore' %}">Rakscore</a></li>
-          <li><a class="dropdown-item" href="{% url 'rakken:rakscorekaart' %}">Rakscore-kaart</a></li>
-        </ul>
-      </li>
+          Rakken</a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <li><a class="dropdown-item" href="{% url 'rakken:all-rakken' %}">Rakken</a></li>
+            <li><a class="dropdown-item" href="{% url 'rakken:rakkenkaart' %}">Rakken-kaart</a></li>
+          </ul>
+        </li>
+      <li class="nav-item"><a class="nav-link" href="{% url 'boten:all-boten' %}">Boten</a></li>
+       <!-- Rakken menu -->
+       <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          Rakscore</a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <li><a class="dropdown-item" href="{% url 'rakken:all-rakscore' %}">Rakscore</a></li>
+            <li><a class="dropdown-item" href="{% url 'rakken:rakscorekaart' %}">Rakscore-kaart</a></li>
+          </ul>
+        </li>
     </ul>
 
     <!-- Rechterkant van de Navbar -->

@@ -28,7 +28,7 @@ class PolarpuntTypeAdmin(admin.ModelAdmin):
 admin.site.register(PolarpuntType, PolarpuntTypeAdmin)
 
 # Register Polarpunt
-class PolarpuntAdmin(admin.ModelAdmin):
+class PolarpuntAdmin(ImportExportModelAdmin):
   list_display = ('boot', 'windspeed', 'twa', 'boatspeed', 'type')
   ordering     = ('boot', 'windspeed', 'twa',)
 
