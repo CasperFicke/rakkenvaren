@@ -95,6 +95,11 @@ class RakType(TimeStampedModel,ActivatorModel,models.Model):
 
 # Rakmodel
 class Rak(TimeStampedModel,ActivatorModel,models.Model):
+  '''
+  rakken.Rak
+  Stores a single rak entry related to :model:`rakken.Evenement`,
+  :model:`rakken.Waypoints1 en -2` and :model:`rakken.type`.
+  '''
   class Meta:
     verbose_name_plural = 'rakken'
   # attributes
