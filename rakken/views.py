@@ -2,6 +2,8 @@
 
 # django
 from django.shortcuts import render
+from django.urls import reverse_lazy
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.core.paginator import Page, Paginator
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 
@@ -59,6 +61,30 @@ def all_waypoints(request):
     'page_count'     : page_count
   }
   return render(request, 'rakken/all_waypoints.html', context)
+
+# Show waypoint
+class WaypointDetailView(DetailView):
+  model               = Waypoint
+  template_name       = 'rakken/show_waypoint.html'
+  context_object_name = 'waypoint'
+
+# Add waypoint
+class WaypointCreateView(CreateView):
+  model         = Waypoint
+  template_name = 'rakken/waypointform.html'
+  fields        = ['naam', 'omschrijving', 'latitude', 'longitude']
+
+# Update waypoint
+class WaypointUpdateView(UpdateView):
+  model         = Waypoint
+  template_name = 'rakken/waypointform.html'
+  fields        = ['naam', 'omschrijving', 'latitude', 'longitude']
+
+# Delete waypoint
+class WaypointDeleteView(DeleteView):
+  model         = Waypoint
+  template_name = 'rakken/waypoint_confirm_delete.html'
+  success_url   = reverse_lazy('rakken:all-waypoints')
 
 # All rakken
 def all_rakken(request):

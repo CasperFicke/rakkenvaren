@@ -1,0 +1,17 @@
+<!-- rakken/templates/rakken/waypoint_conform_delete.html -->
+
+{% extends 'base.html' %}
+
+{% block title%}
+  waypoint confirm delete
+{% endblock title %}
+
+{% block content %}
+  <form method="post">
+    {% csrf_token %}
+    <p>Are you sure you want to delete waypoint {{ waypoint.naam }} ?</p>
+    <button type="submit" class="btn btn-primary">Confirm</button>
+  </form>
+  <br>
+  <a href="{% url 'rakken:all-waypoints' %}" class="btn btn-secondary">Cancel</a>
+{% endblock content %}

@@ -1,0 +1,17 @@
+<!-- site_basis/templates/site_basis/about.html -->
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ title|title }}{% endblock title %}
+
+{% block css_files %}
+  
+{% endblock css_files%}
+
+{% block content %}
+  {% include 'includes/breadcrumb.html' %}
+  <div class="container">
+    <h2>Over deze site:</h2>
+  </div>
+{% endblock content %}

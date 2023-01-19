@@ -1,0 +1,18 @@
+<!-- rakken/templates/rakken/show_waypoint.html -->
+
+{% extends 'base.html' %}
+
+{% block title%}
+  waypoint {{ waypoint.naam }}
+{% endblock title %}
+
+{% block content %}
+ <h1>{{ waypoint.naam }}</h1>
+ <p>{{ waypoint.omschrijving }}</p>
+ {% if user.is_superuser %}
+ <br>
+ <a href="{% url 'rakken:update-waypoint' waypoint.pk %}?next={{request.get_full_path}}" class="btn btn-secondary" >Edit</a>
+ <a href="{% url 'rakken:delete-waypoint' waypoint.pk %}" class="btn btn-secondary" >Delete</a>
+{% endif %}
+<a href="{% url 'rakken:all-waypoints' %}" class="btn btn-secondary">Terug</a>
+{% endblock content %}

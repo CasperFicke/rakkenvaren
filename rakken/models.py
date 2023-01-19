@@ -77,6 +77,11 @@ class Waypoint(TimeStampedModel,ActivatorModel,models.Model):
   def __str__(self):
     return self.naam
 
+  # absolute url
+  def get_absolute_url(self):
+      return reverse("rakken:show-waypoint", kwargs={"pk": self.pk})
+  
+
 # Raktype model
 class RakType(TimeStampedModel,ActivatorModel,models.Model):
   class Meta:

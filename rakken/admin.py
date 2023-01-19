@@ -41,8 +41,9 @@ admin.site.register(WaypointType, WaypointTypeAdmin)
 
 # Register Waypoint
 class WaypointAdmin(ImportExportModelAdmin):
-  list_display = ('naam', 'type', 'omschrijving', 'latitude', 'longitude',)
-  ordering     = ('naam',)
+  list_display  = ('naam', 'type', 'omschrijving', 'latitude', 'longitude',)
+  list_per_page = 25
+  ordering      = ('naam',)
 
 # overall admin area
 admin.site.register(Waypoint, WaypointAdmin)
@@ -59,9 +60,10 @@ admin.site.register(RakType, RakTypeAdmin)
 
 # Register Rak
 class RakAdmin(ImportExportModelAdmin):
-  list_display = ('uuid', 'evenement', 'waypoint1', 'waypoint2', 'lengte', 'afstand', 'type',)
-  ordering     = ('evenement', 'waypoint1',)
-  list_filter  = ('evenement', 'type', 'waypoint1')
+  list_display  = ('uuid', 'evenement', 'waypoint1', 'waypoint2', 'lengte', 'afstand', 'type',)
+  ordering      = ('evenement', 'waypoint1',)
+  list_filter   = ('evenement', 'type', 'waypoint1')
+  list_per_page = 25
 
 # overall admin area
 admin.site.register(Rak, RakAdmin)

@@ -38,6 +38,7 @@ INSTALLED_APPS = [
   # support packages
   'django_extensions',
   'import_export',
+  'crispy_forms',
 ]
 
 MIDDLEWARE = [

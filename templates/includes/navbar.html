@@ -37,6 +37,7 @@
 
     <!-- Rechterkant van de Navbar -->
     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+      <li class="nav-item"><a class="nav-link" href="{% url 'site-basis:about' %}">About</a></li>
       <!-- Usermanagement -->
       {% if user.is_authenticated %}
       <li class="nav-item dropdown dropstart">
