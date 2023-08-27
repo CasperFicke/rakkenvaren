@@ -60,10 +60,11 @@ admin.site.register(RakType, RakTypeAdmin)
 
 # Register Rak
 class RakAdmin(ImportExportModelAdmin):
-  list_display  = ('uuid', 'evenement', 'waypoint1', 'waypoint2', 'lengte', 'afstand', 'type',)
-  ordering      = ('evenement', 'waypoint1',)
-  list_filter   = ('evenement', 'type', 'waypoint1')
-  list_per_page = 25
+  list_display       = ('evenement', 'waypoint1', 'waypoint2', 'type', 'lengte', 'afstand',)
+  list_display_links = ('waypoint1', 'waypoint2')
+  ordering           = ('evenement', 'waypoint1',)
+  list_filter        = ('evenement', 'type', 'waypoint1')
+  list_per_page      = 25
 
 # overall admin area
 admin.site.register(Rak, RakAdmin)

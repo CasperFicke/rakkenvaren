@@ -7,12 +7,23 @@
 {% endblock title %}
 
 {% block content %}
- <h1>{{ waypoint.naam }}</h1>
- <p>{{ waypoint.omschrijving }}</p>
- {% if user.is_superuser %}
- <br>
- <a href="{% url 'rakken:update-waypoint' waypoint.pk %}?next={{request.get_full_path}}" class="btn btn-secondary" >Edit</a>
- <a href="{% url 'rakken:delete-waypoint' waypoint.pk %}" class="btn btn-secondary" >Delete</a>
-{% endif %}
-<a href="{% url 'rakken:all-waypoints' %}" class="btn btn-secondary">Terug</a>
+  <div class='row'>
+    <div class='col-md-5'>
+      <h2>Waypoint: {{ waypoint.naam }}</h2>
+      <p>Type: {{ waypoint.type }}</p>
+      <p>Omschrijving: {{ waypoint.omschrijving }}</p>
+      <p>Lokatie: {{ waypoint.latitude }} ; {{ waypoint.longitude }}</p>
+    </div>
+    <div class='col-md-7'>
+      <h4>kaart</h4>
+      {{ m |safe }}
+    </div>
+  </div>
+  <br>
+  {% if user.is_authenticated %}
+    <br>
+    <a href="{% url 'rakken:update-waypoint' waypoint.pk %}?next={{request.get_full_path}}" class="btn btn-secondary" >Edit</a>
+    <a href="{% url 'rakken:delete-waypoint' waypoint.pk %}" class="btn btn-secondary" >Delete</a>
+  {% endif %}
+  <a href="{% url 'rakken:all-waypoints' %}" class="btn btn-secondary">Terug</a>
 {% endblock content %}

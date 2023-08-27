@@ -12,7 +12,7 @@
       <div class="col-md-2">
         <h4>Waypoints</h4>
        {% for waypoint in waypoints %}
-       {{ waypoint.naam|capfirst }}<br>
+       <a href="{% url 'rakken:show-waypoint' waypoint.pk %}">{{ waypoint.naam|capfirst }}</a><br>
        {% endfor %}
       </div>
       <div class="col-md-10">

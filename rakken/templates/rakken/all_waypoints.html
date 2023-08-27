@@ -32,8 +32,8 @@
         {% if waypoints_list %}
          {% for waypoint in page_obj %}
             <tr>
-              <th><a href="{% url 'rakken:show-waypoint' waypoint.pk %}">{{ waypoint.naam }}</a></td>
-              <th>{{ waypoint.type }}</td>
+              <th><a href="{% url 'rakken:show-waypoint' waypoint.pk %}">{{ waypoint.naam }}</a></th>
+              <td>{{ waypoint.type }}</td>
               <td>{{ waypoint.omschrijving }}</td>
               <td>{{ waypoint.latitude }}</td>
               <td>{{ waypoint.longitude }}</td>

@@ -5,7 +5,8 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.core.paginator import Page, Paginator
-from django.http import HttpResponse, HttpResponseRedirect, Http404
+from django.http import HttpResponse, HttpResponseRedirect, Http404, JsonResponse
+from django.core import serializers
 
 from geopy.distance  import geodesic
 from geographiclib.geodesic import Geodesic
@@ -62,23 +63,52 @@ def all_waypoints(request):
   }
   return render(request, 'rakken/all_waypoints.html', context)
 
+# All waypoints json
+def all_waypointsjson(request):
+  waypoints_list  = Waypoint.objects.all().order_by("naam")
+  data = serializers.serialize("json", waypoints_list, fields=('naam', 'latitude', 'longitude'))
+  return JsonResponse(data, safe=False)
+
 # Show waypoint
 class WaypointDetailView(DetailView):
+  title   = 'waypoint'
+  tooltip = 'Click voor meer info'
+  loca = 52.44, 5.21
+  m = folium.Map(
+    location   = loca,
+    tiles      = 'openstreetmap',
+    zoom_start = 12
+  )
+  folium.TileLayer('https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png',
+    name='openseamap',
+    attr='openseamap'
+  ).add_to(m)
+  # add location marker
+  folium.Marker(
+    loca,
+    tooltip = Waypoint.naam,
+    popup   = Waypoint.naam,
+    icon    = folium.Icon(color='blue')
+  ).add_to(m)
+  folium.LayerControl().add_to(m)
+  m = m._repr_html_()
   model               = Waypoint
   template_name       = 'rakken/show_waypoint.html'
   context_object_name = 'waypoint'
+  extra_context       = {'m': m}
 
 # Add waypoint
 class WaypointCreateView(CreateView):
   model         = Waypoint
   template_name = 'rakken/waypointform.html'
-  fields        = ['naam', 'omschrijving', 'latitude', 'longitude']
+  fields        = ['naam', 'omschrijving', 'latitude', 'longitude', 'type']
+  success_url   = reverse_lazy('rakken:all-waypoints')
 
 # Update waypoint
 class WaypointUpdateView(UpdateView):
   model         = Waypoint
   template_name = 'rakken/waypointform.html'
-  fields        = ['naam', 'omschrijving', 'latitude', 'longitude']
+  fields        = ['naam', 'omschrijving', 'latitude', 'longitude', 'type']
 
 # Delete waypoint
 class WaypointDeleteView(DeleteView):
@@ -107,6 +137,24 @@ def all_rakken(request):
     'page_count'   : page_count
   }
   return render(request, 'rakken/all_rakken.html', context)
+
+# Show Rak
+class RakDetailView(DetailView):
+  pass
+
+# Add Rak
+class RakCreateView(CreateView):
+  pass
+
+# Update Rak
+class RakUpdateView(UpdateView):
+  pass
+
+# Delete rak
+class RakDeleteView(DeleteView):
+  model         = Rak
+  template_name = 'rakken/rak_confirm_delete.html'
+  success_url   = reverse_lazy('rakken:all-rakken')
 
 # rakkenkaart
 def rakkenkaart(request):

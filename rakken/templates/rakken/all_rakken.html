@@ -14,6 +14,7 @@
     <table class="table table-striped table-sm table-bordered table-hover">
       <thead class="thead-dark">
         <tr>
+          <th scope="col">Rak detail</th>
           <th scope="col">Evenement</th>
           <th scope="col">Type</th>
           <th scope="col">Waypoint 1</th>
@@ -28,10 +29,11 @@
         {% if rakken_list %}
           {% for rak in page_obj %}
             <tr>
+              <td><a href="{% url 'rakken:show-waypoint' rak.waypoint1.pk %}" class="btn btn-outline-secondary"><i class="fas fa-edit"></i></a></td>
               <td>{{ rak.evenement }}</td>
               <td>{{ rak.type }}</td>
-              <td>{{ rak.waypoint1.naam }}</td>
-              <td>{{ rak.waypoint2.naam }}</td>
+              <td><a href="{% url 'rakken:show-waypoint' rak.waypoint1.pk %}">{{ rak.waypoint1.naam }}</a></td>
+              <td><a href="{% url 'rakken:show-waypoint' rak.waypoint2.pk %}">{{ rak.waypoint2.naam }}</a></td>
               <td>{{ rak.lengte }}</td>
               <td>{{ rak.afstand }}</td>
               <td>{{ rak.bearing12 }}</td>
