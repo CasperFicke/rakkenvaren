@@ -29,7 +29,7 @@
         {% if rakken_list %}
           {% for rak in page_obj %}
             <tr>
-              <td><a href="{% url 'rakken:show-waypoint' rak.waypoint1.pk %}" class="btn btn-outline-secondary"><i class="fas fa-edit"></i></a></td>
+              <td><a href="{% url 'rakken:show-rak' rak.pk %}" class="btn btn-outline-secondary"><i class="fas fa-edit"></i></a></td>
               <td>{{ rak.evenement }}</td>
               <td>{{ rak.type }}</td>
               <td><a href="{% url 'rakken:show-waypoint' rak.waypoint1.pk %}">{{ rak.waypoint1.naam }}</a></td>

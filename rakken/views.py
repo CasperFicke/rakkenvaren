@@ -140,7 +140,29 @@ def all_rakken(request):
 
 # Show Rak
 class RakDetailView(DetailView):
-  pass
+  title   = 'rak'
+  tooltip = 'Click voor meer info'
+  loca    = 52.44, 5.21
+  m = folium.Map(
+    location   = loca,
+    tiles      = 'openstreetmap',
+    zoom_start = 12
+  )
+  folium.TileLayer('https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png',
+    name='openseamap',
+    attr='openseamap'
+  ).add_to(m)
+  # add location marker
+  folium.Marker(
+    loca,
+    icon    = folium.Icon(color='blue')
+  ).add_to(m)
+  folium.LayerControl().add_to(m)
+  m = m._repr_html_()
+  model               = Rak
+  template_name       = 'rakken/show_rak.html'
+  context_object_name = 'rak'
+  extra_context       = {'m': m}
 
 # Add Rak
 class RakCreateView(CreateView):

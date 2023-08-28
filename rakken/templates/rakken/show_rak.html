@@ -1,0 +1,28 @@
+<!-- rakken/templates/rakken/show_rak.html -->
+
+{% extends 'base.html' %}
+
+{% block title%}
+  Rak {{ rak.uuid }}
+{% endblock title %}
+
+{% block content %}
+  <div class='row'>
+    <div class='col-md-5'>
+      <h2>Rak:</h2>
+      <p>Waypoint 1: {{ rak.waypoint1.naam }}</p>
+      <p>Waypoint 2: {{ rak.waypoint2.naam }}</p>
+    </div>
+    <div class='col-md-7'>
+      <h4>kaart</h4>
+      {{ m |safe }}
+    </div>
+  </div>
+  <br>
+  {% if user.is_authenticated %}
+    <br>
+    <a href="{% url 'rakken:update-rak' rak.pk %}?next={{request.get_full_path}}" class="btn btn-secondary" >Edit</a>
+    <a href="{% url 'rakken:delete-rak' rak.pk %}" class="btn btn-secondary" >Delete</a>
+  {% endif %}
+  <a href="{% url 'rakken:all-rakken' %}" class="btn btn-secondary">Terug</a>
+{% endblock content %}

@@ -1,0 +1,17 @@
+<!-- rakken/templates/rakken/rak_conform_delete.html -->
+
+{% extends 'base.html' %}
+
+{% block title%}
+  rak confirm delete
+{% endblock title %}
+
+{% block content %}
+  <form method="post">
+    {% csrf_token %}
+    <p>Are you sure you want to delete rak {{ rak.waypoint1.naam }} - {{ rak.waypoint2.naam }} ?</p>
+    <button type="submit" class="btn btn-primary">Confirm</button>
+  </form>
+  <br>
+  <a href="{% url 'rakken:all-rakken' %}" class="btn btn-secondary">Cancel</a>
+{% endblock content %}

@@ -34,7 +34,7 @@
         {% if rakscore_list %}
           {% for rakscore in page_obj %}
             <tr>
-              <td><a href="{% url 'rakken:all-rakken' %}" class="btn btn-outline-secondary"><i class="fas fa-edit"></i></a></td>
+              <td><a href="{% url 'rakken:show-rak' rakscore.rak.pk %}" class="btn btn-outline-secondary"><i class="fas fa-edit"></i></a></td>
               <td>{{ rakscore.rak.evenement }}</td>
               <td>{{ rakscore.rak.type }}</td>
               <td><a href="{% url 'rakken:show-waypoint' rakscore.waypoint1.pk %}">{{ rakscore.waypoint1.naam }}</a></td>
