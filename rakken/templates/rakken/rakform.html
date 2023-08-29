@@ -1,11 +1,11 @@
-<!-- rakken/templates/rakken/waypointform.html -->
+<!-- rakken/templates/rakken/rakform.html -->
 
 {% extends 'base.html' %}
 
 {% load crispy_forms_tags %}
 
 {% block title%}
-  waypoint add/update
+  Rak add/update
 {% endblock title %}
 
 {% block content %}
@@ -15,5 +15,6 @@
     <br>
     <button type="submit" class="btn btn-primary">Save</button>
   </form>
-  <a href="{% url 'rakken:all-waypoints' %}" class="btn btn-secondary">Cancel</a>
+  
+  <a href="{% url 'rakken:all-rakken' %}" class="btn btn-secondary">Cancel</a>
 {% endblock content %}

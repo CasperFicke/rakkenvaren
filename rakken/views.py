@@ -29,7 +29,7 @@ from folium import plugins
 
 # local
 from .models import Evenement, RakScore, Weer, Waypoint, Rak
-from .utils import get_twa, get_score, get_bootje_coords
+from .utils import get_twa, get_score, get_bootje_coords, get_ip_address, get_center_coords, get_zoom
 
 # Rakken indexpage
 def index_rakken(request):
@@ -69,33 +69,42 @@ def all_waypointsjson(request):
   data = serializers.serialize("json", waypoints_list, fields=('naam', 'latitude', 'longitude'))
   return JsonResponse(data, safe=False)
 
-# Show waypoint
-class WaypointDetailView(DetailView):
-  title   = 'waypoint'
-  tooltip = 'Click voor meer info'
-  loca = 52.44, 5.21
-  m = folium.Map(
-    location   = loca,
-    tiles      = 'openstreetmap',
-    zoom_start = 12
-  )
-  folium.TileLayer('https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png',
-    name='openseamap',
-    attr='openseamap'
-  ).add_to(m)
-  # add location marker
-  folium.Marker(
-    loca,
-    tooltip = Waypoint.naam,
-    popup   = Waypoint.naam,
-    icon    = folium.Icon(color='blue')
-  ).add_to(m)
-  folium.LayerControl().add_to(m)
-  m = m._repr_html_()
-  model               = Waypoint
-  template_name       = 'rakken/show_waypoint.html'
-  context_object_name = 'waypoint'
-  extra_context       = {'m': m}
+# show waypoint
+def show_waypoint(request, waypoint_uuid):
+  try:
+    waypoint = Waypoint.objects.get(uuid=waypoint_uuid)
+    title    = 'waypoint: ' + waypoint.naam
+    tooltip  = 'Click voor meer info'
+    loca     = waypoint.latitude, waypoint.longitude
+    # map setup
+    m = folium.Map(
+      location   = loca,
+      tiles      = 'openstreetmap',
+      zoom_start = 12
+    )
+    folium.TileLayer('https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png',
+      name='openseamap',
+      attr='openseamap'
+    ).add_to(m)
+
+    # add location marker
+    folium.Marker(
+      loca,
+      tooltip = waypoint.naam,
+      popup   = waypoint.omschrijving,
+      icon    = folium.Icon(color='blue')
+    ).add_to(m)
+    folium.LayerControl().add_to(m)
+
+    m = m._repr_html_()
+    context  = {
+      'title'    : title,
+      'waypoint' : waypoint,
+      'm': m
+    }
+    return render(request, 'rakken/show_waypoint.html', context)
+  except:
+    raise Http404()
 
 # Add waypoint
 class WaypointCreateView(CreateView):
@@ -138,39 +147,81 @@ def all_rakken(request):
   }
   return render(request, 'rakken/all_rakken.html', context)
 
-# Show Rak
-class RakDetailView(DetailView):
-  title   = 'rak'
-  tooltip = 'Click voor meer info'
-  loca    = 52.44, 5.21
-  m = folium.Map(
-    location   = loca,
-    tiles      = 'openstreetmap',
-    zoom_start = 12
-  )
-  folium.TileLayer('https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png',
-    name='openseamap',
-    attr='openseamap'
-  ).add_to(m)
-  # add location marker
-  folium.Marker(
-    loca,
-    icon    = folium.Icon(color='blue')
-  ).add_to(m)
-  folium.LayerControl().add_to(m)
-  m = m._repr_html_()
-  model               = Rak
-  template_name       = 'rakken/show_rak.html'
-  context_object_name = 'rak'
-  extra_context       = {'m': m}
+# show rak
+def show_rak(request, rak_uuid):
+  try:
+    rak = Rak.objects.get(uuid=rak_uuid)
+    title   = 'rak '
+    tooltip = 'Click voor meer info'
+    loca    = rak.waypoint1.latitude, rak.waypoint1.longitude
+    locb    = rak.waypoint2.latitude, rak.waypoint2.longitude
+
+    # Map setup
+    m = folium.Map(
+      location   = get_center_coords(rak.waypoint1.latitude, rak.waypoint1.longitude, rak.waypoint2.latitude, rak.waypoint2.longitude),
+      tiles      = 'openstreetmap',
+      zoom_start = get_zoom(rak.afstand), # helperfunction uit utils.py
+      #zoom_start = 10
+    )
+    folium.TileLayer('https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png',
+      name='openseamap',
+      attr='openseamap'
+    ).add_to(m)
+    # add layer for waypoints
+    waypointsLayer = folium.FeatureGroup(name="Waypoints").add_to(m)
+    # add layer for rak
+    rakLayer = folium.FeatureGroup(name="Rak").add_to(m)
+
+    # add waypoint1
+    folium.Marker(
+      location = loca,
+      tooltip  = rak.waypoint1.naam,
+      popup    = rak.waypoint1.omschrijving,
+      icon     = folium.Icon(color='blue')
+    ).add_to(waypointsLayer)
+
+    # add waypoint2
+    folium.Marker(
+      location = locb,
+      tooltip  = rak.waypoint2.naam,
+      popup    = rak.waypoint2.omschrijving,
+      icon     = folium.Icon(color='blue')
+    ).add_to(waypointsLayer)
+
+    # add polyline
+    folium.PolyLine(
+      [loca, locb],
+      popup   = str(rak.waypoint1.naam) + ' - ' + str(rak.waypoint2.naam),
+      tooltip = tooltip,
+      color   = '#080080',
+      weight  = 4,
+    ).add_to(rakLayer)
+
+    # layercontrol
+    folium.LayerControl().add_to(m)
+
+    m = m._repr_html_()
+    context  = {
+      'title' : title,
+      'rak'   : rak,
+      'm'     : m
+    }
+    return render(request, 'rakken/show_rak.html', context)
+  except:
+    raise Http404()
 
 # Add Rak
 class RakCreateView(CreateView):
-  pass
+  model         = Rak
+  template_name = 'rakken/rakform.html'
+  fields        = ['evenement', 'waypoint1', 'waypoint2', 'type', 'lengte']
+  success_url   = reverse_lazy('rakken:all-rakken')
 
 # Update Rak
 class RakUpdateView(UpdateView):
-  pass
+  model         = Rak
+  template_name = 'rakken/rakform.html'
+  fields        = ['evenement', 'waypoint1', 'waypoint2', 'type', 'lengte']
 
 # Delete rak
 class RakDeleteView(DeleteView):
@@ -219,10 +270,12 @@ def rakkenkaart(request):
   df = pd.DataFrame(list(waypoints.values()))
   #print(df)
   for (index, rows) in df.iterrows():
-    lat   = rows.loc['latitude']
-    lng   = rows.loc['longitude']
-    type  = rows.loc['type_id']
-    popup = str(rows.loc['naam']+ ' ' + rows.loc['omschrijving'] + ' ' + str(type)).title()
+    lat     = rows.loc['latitude']
+    lng     = rows.loc['longitude']
+    type    = rows.loc['type_id']
+    tooltip = rows.loc['naam']
+    popup   = str(rows.loc['omschrijving'] + ' ' + str(type)).title()
+    #popup  = str(rows.loc['naam']+ ' ' + rows.loc['omschrijving'] + ' ' + str(type)).title()
     if type > 1:
       mc = 'green'
       mi = 'leaf'
@@ -372,10 +425,12 @@ def rakscorekaart(request):
   df = pd.DataFrame(list(waypoints.values()))
   # print(df)
   for (index, rows) in df.iterrows():
-    lat   = rows.loc['latitude']
-    lng   = rows.loc['longitude']
-    type  = rows.loc['type_id']
-    popup = str(rows.loc['naam']+ ' ' + rows.loc['omschrijving']).title()
+    lat     = rows.loc['latitude']
+    lng     = rows.loc['longitude']
+    type    = rows.loc['type_id']
+    tooltip = rows.loc['naam']
+    popup   = rows.loc['omschrijving']
+    #popup = str(rows.loc['naam']+ ' ' + rows.loc['omschrijving']).title()
     if type > 1:
       mc = 'green'
       mi = 'leaf'
@@ -384,8 +439,8 @@ def rakscorekaart(request):
       mi = 'bolt'
     folium.Marker(
       location = [lat, lng],
-      popup    = popup,
       tooltip  = tooltip,
+      popup    = popup,
       icon     = folium.Icon(color=mc, prefix='fa', icon=mi)
     ).add_to(waypointMarkersLayer)
 

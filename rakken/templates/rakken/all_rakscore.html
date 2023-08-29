@@ -34,11 +34,11 @@
         {% if rakscore_list %}
           {% for rakscore in page_obj %}
             <tr>
-              <td><a href="{% url 'rakken:show-rak' rakscore.rak.pk %}" class="btn btn-outline-secondary"><i class="fas fa-edit"></i></a></td>
+              <td><a href="{% url 'rakken:show-rak' rakscore.rak.uuid %}" class="btn btn-outline-secondary"><i class="fas fa-edit"></i></a></td>
               <td>{{ rakscore.rak.evenement }}</td>
               <td>{{ rakscore.rak.type }}</td>
-              <td><a href="{% url 'rakken:show-waypoint' rakscore.waypoint1.pk %}">{{ rakscore.waypoint1.naam }}</a></td>
-              <td><a href="{% url 'rakken:show-waypoint' rakscore.waypoint2.pk %}">{{ rakscore.waypoint2.naam }}</a></td>
+              <td><a href="{% url 'rakken:show-waypoint' rakscore.waypoint1.uuid %}">{{ rakscore.waypoint1.naam }}</a></td>
+              <td><a href="{% url 'rakken:show-waypoint' rakscore.waypoint2.uuid %}">{{ rakscore.waypoint2.naam }}</a></td>
               <td>{{ rakscore.rak.lengte }}</td>
               <td>{{ rakscore.rak.afstand }}</td>
               <td class="{{ rakscore.color }}">{{ rakscore.bearing }}</td>

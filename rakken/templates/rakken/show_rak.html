@@ -10,8 +10,12 @@
   <div class='row'>
     <div class='col-md-5'>
       <h2>Rak:</h2>
-      <p>Waypoint 1: {{ rak.waypoint1.naam }}</p>
-      <p>Waypoint 2: {{ rak.waypoint2.naam }}</p>
+      <p><a href="{% url 'rakken:show-waypoint' rak.waypoint1.uuid %}">{{ rak.waypoint1.naam }}</a> {{ rak.waypoint1.omschrijving }}</p>
+      <p><a href="{% url 'rakken:show-waypoint' rak.waypoint2.uuid %}">{{ rak.waypoint2.naam }}</a> {{ rak.waypoint2.omschrijving }}</p>
+      <p>Lengte: {{ rak.lengte }}</p>
+      <p>Afstand: {{ rak.afstand }}</p>
+      <p>Koers van {{ rak.waypoint1.naam }} naar {{ rak.waypoint2.naam }} : {{ rak.bearing12 }}</p>
+      <p>Koers van {{ rak.waypoint2.naam }} naar {{ rak.waypoint1.naam }} : {{ rak.bearing21 }}</p>
     </div>
     <div class='col-md-7'>
       <h4>kaart</h4>

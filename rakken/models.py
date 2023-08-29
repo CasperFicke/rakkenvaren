@@ -47,7 +47,7 @@ class Evenement(TimeStampedModel, ActivatorModel, models.Model):
 # WaypointType model
 class WaypointType(TimeStampedModel,ActivatorModel,models.Model):
   class Meta:
-    verbose_name        = 'waypoint type'
+    verbose_name        = 'waypoint-type'
     verbose_name_plural = 'waypoint types'
   # attributes
   type         = models.CharField('Waypoint Type', max_length=100)
@@ -65,7 +65,7 @@ class Waypoint(TimeStampedModel,ActivatorModel,models.Model):
     verbose_name_plural = 'waypoints'
   # attributes
   naam         = models.CharField('Waypoint naam', max_length=255, help_text='Naam van het waypoint', unique=True)
-  omschrijving = models.TextField('Waypoint Omschrijving', blank=True, help_text='Omschrijving van het waypoint')
+  omschrijving = models.TextField('Waypoint omschrijving', blank=True, help_text='Omschrijving van het waypoint')
   latitude     = models.FloatField(default=0)
   longitude    = models.FloatField(default=0)
   # relaties
@@ -79,8 +79,7 @@ class Waypoint(TimeStampedModel,ActivatorModel,models.Model):
 
   # absolute url
   def get_absolute_url(self):
-      return reverse("rakken:show-waypoint", kwargs={"pk": self.pk})
-  
+    return reverse("rakken:show-waypoint", args=[str(self.uuid)])
 
 # Raktype model
 class RakType(TimeStampedModel,ActivatorModel,models.Model):
@@ -144,6 +143,10 @@ class Rak(TimeStampedModel,ActivatorModel,models.Model):
   # functie om model in de admin web-pagina te kunnen presenteren
   #def __str__(self):
   #  return self.uuid
+  
+  # absolute url
+  def get_absolute_url(self):
+    return reverse("rakken:show-rak", args=[str(self.uuid)])
 
 # Rakscore-model
 class RakScore(TimeStampedModel,ActivatorModel,models.Model):
