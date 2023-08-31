@@ -11,11 +11,13 @@ from django.core import serializers
 from geopy.distance  import geodesic
 from geographiclib.geodesic import Geodesic
 
-#import numpy and matplotlib library
+# import numpy and matplotlib
 import numpy as np
-import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.use('agg')
 
 # import io
+import io
 from io import StringIO
 import urllib, base64
 
@@ -520,51 +522,65 @@ def rakscorekaart(request):
   context['map'] = map
   return render(request, 'rakken/rakscorekaart.html', context)
 
-# rakkengrah
+# rakkengraph
 def rakkengraph(request):
+  title      = 'rakkengraph'
+  # bepaal rakken en waypoints die in graph moeten worden opgenomen
+  rakken = Rak.objects.filter(evenement=2)
+  
+  # bepaal unieke waypoints behorende bij rakken van geselecteerd evenement
+  usedwaypoints = []
+  for rak in rakken:
+    if not rak.waypoint1 in usedwaypoints:
+      usedwaypoints.append(rak.waypoint1)
+    if not rak.waypoint2 in usedwaypoints:
+      usedwaypoints.append(rak.waypoint2)
+  
   # define graph
   G = nx.Graph()
+  G.clear()
 
   # Add waypoints as nodes
-  waypoints = Waypoint.objects.all()
-  df        = pd.DataFrame(list(waypoints.values()))
-  #print(df)
-  for (index, rows) in df.iterrows():
-    nodenaam = rows.loc['naam']
+  for waypoint in usedwaypoints:
+    nodenaam = waypoint
     G.add_node(nodenaam)
     nx.set_node_attributes(G, {nodenaam: "red"}, name="color")
-    #print(G.nodes[nodenaam]["color"])
-
-  aantalnodes = G.number_of_nodes()
   
   # Add rakken as edges
-  rakken = Rak.objects.all()
-  rakken = Rak.objects.filter(evenement=2)
-  df     = pd.DataFrame(list(rakken.values()))
-  #print(df)
-  for (index, rows) in df.iterrows():
+  dfrakken = pd.DataFrame(list(rakken.values()))
+  #print(dfrakken)
+  for (index, rows) in dfrakken.iterrows():
     wpa = Waypoint.objects.filter(pk=rows.loc['waypoint1_id'])
     wpb = Waypoint.objects.filter(pk=rows.loc['waypoint2_id'])
     G.add_edge(wpa[0], wpb[0])
 
+  aantalnodes = G.number_of_nodes()
   aantaledges = G.number_of_edges()
 
   nx.draw(
     G,
-    #pos         = pos,
     with_labels = True,
     node_color  = "teal",
-    node_size   = 3000,
-    font_color  = "white",
-    font_size   = 20,
-    font_family = "Times New Roman",
-    font_weight = "bold",
-    width       = 5
+    node_size   = 2000,
+    font_color  = "black",           # node textcolor
+    font_size   = 14,                # node fontsize
+    font_family = "Times New Roman", # node font
+    font_weight = "normal",          # nodetext fontweight
+    width       = 3                  # edge line width
   )
-  plt.margins(0.2)
-  plt.show()
+  # set margin om graph picture
+  matplotlib.pyplot.margins(0.2)
   
+  # convert graph picture into string buffer and then convert base64 code into image
+  buf = io.BytesIO()
+  matplotlib.pyplot.savefig(buf, format='png')
+  buf.seek(0)
+  string = base64.b64encode(buf.read())
+  uri    = urllib.parse.quote(string)
+
   context = {
+    'title'       : title,
+    'data'        : uri,
     'aantalnodes' : aantalnodes,
     'aantaledges' : aantaledges
   }
