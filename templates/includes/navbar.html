@@ -21,6 +21,7 @@
           <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
             <li><a class="dropdown-item" href="{% url 'rakken:all-rakken' %}">Rakken</a></li>
             <li><a class="dropdown-item" href="{% url 'rakken:rakkenkaart' %}">Rakken-kaart</a></li>
+            <li><a class="dropdown-item" href="{% url 'rakken:rakkengraph' %}">Rakken-graph</a></li>
           </ul>
         </li>
       <li class="nav-item"><a class="nav-link" href="{% url 'boten:all-boten' %}">Boten</a></li>
@@ -38,6 +39,8 @@
     <!-- Rechterkant van de Navbar -->
     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
       <li class="nav-item"><a class="nav-link" href="{% url 'site-basis:about' %}">About</a></li>
+      <li class="nav-item"><a class="nav-link" href="{% url 'site-basis:contact' %}">Contact</a></li>
+      <li class="nav-item"><a class="nav-link" href="{% url 'site-basis:privacy' %}">Privacy</a></li>
       <!-- Usermanagement -->
       {% if user.is_authenticated %}
       <li class="nav-item dropdown dropstart">

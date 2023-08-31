@@ -1,0 +1,21 @@
+<!-- rakken/templates/rakken/rakkengraph.html -->
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ title|title }}{% endblock title %}
+
+{% block css_files %} 
+{% endblock css_files%}
+
+{% block content %}
+  {% include 'includes/breadcrumb.html' %}
+  <div class="container">
+    <br>
+    <h2>Graph:</h2>
+      <p>Aantal Nodes: <strong>{{ aantalnodes }}</strong></p>
+      <p>Aantal Edges: <strong>{{ aantaledges }}</strong></p>
+    
+    {% include 'includes/pagina_nav.html' %}
+  </div>
+{% endblock content %}

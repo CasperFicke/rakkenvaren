@@ -10,6 +10,7 @@
   <div class='row'>
     <div class='col-md-5'>
       <h2>Rak:</h2>
+      <p>Type: <strong>{{ rak.type }}</strong></p>
       <p><a href="{% url 'rakken:show-waypoint' rak.waypoint1.uuid %}">{{ rak.waypoint1.naam }}</a> {{ rak.waypoint1.omschrijving }}</p>
       <p><a href="{% url 'rakken:show-waypoint' rak.waypoint2.uuid %}">{{ rak.waypoint2.naam }}</a> {{ rak.waypoint2.omschrijving }}</p>
       <p>Lengte: {{ rak.lengte }}</p>

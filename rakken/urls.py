@@ -6,11 +6,9 @@ from django.urls import path
 # local
 from . import views
 from .views import (
-  show_waypoint,
   WaypointCreateView, 
   WaypointUpdateView,
   WaypointDeleteView,
-  show_rak,
   RakCreateView,
   RakUpdateView,
   RakDeleteView
@@ -32,6 +30,7 @@ urlpatterns = [
   path('rakken/'               , views.index_rakken, name="index-rakken"),
   path('rakken/rakken/'        , views.all_rakken, name="all-rakken"),
   path('rakken/rakkenkaart/'   , views.rakkenkaart, name="rakkenkaart"),
+  path('rakken/rakkengraph/'   , views.rakkengraph, name="rakkengraph"),
   # CRUD single rak
   #path('rakken/<int:pk>'        , RakDetailView.as_view(), name="show-rak"),
   path('rakken/add'             , RakCreateView.as_view(), name="add-rak"),

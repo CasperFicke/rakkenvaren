@@ -24,6 +24,9 @@ geod = Geodesic.WGS84
 # import pandas (data-analytics)
 import pandas as pd
 
+# import networkx (network analysis)
+import networkx as nx
+
 import folium
 from folium import plugins
 
@@ -479,7 +482,6 @@ def rakscorekaart(request):
       color        = color
       ).add_to(kz24uursLayer)
 
-
   # add polyline 8uurs
   rakscore_list = RakScore.objects.all()
   for rakscore in rakscore_list:
@@ -517,3 +519,53 @@ def rakscorekaart(request):
   map = map._repr_html_()
   context['map'] = map
   return render(request, 'rakken/rakscorekaart.html', context)
+
+# rakkengrah
+def rakkengraph(request):
+  # define graph
+  G = nx.Graph()
+
+  # Add waypoints as nodes
+  waypoints = Waypoint.objects.all()
+  df        = pd.DataFrame(list(waypoints.values()))
+  #print(df)
+  for (index, rows) in df.iterrows():
+    nodenaam = rows.loc['naam']
+    G.add_node(nodenaam)
+    nx.set_node_attributes(G, {nodenaam: "red"}, name="color")
+    #print(G.nodes[nodenaam]["color"])
+
+  aantalnodes = G.number_of_nodes()
+  
+  # Add rakken as edges
+  rakken = Rak.objects.all()
+  rakken = Rak.objects.filter(evenement=2)
+  df     = pd.DataFrame(list(rakken.values()))
+  #print(df)
+  for (index, rows) in df.iterrows():
+    wpa = Waypoint.objects.filter(pk=rows.loc['waypoint1_id'])
+    wpb = Waypoint.objects.filter(pk=rows.loc['waypoint2_id'])
+    G.add_edge(wpa[0], wpb[0])
+
+  aantaledges = G.number_of_edges()
+
+  nx.draw(
+    G,
+    #pos         = pos,
+    with_labels = True,
+    node_color  = "teal",
+    node_size   = 3000,
+    font_color  = "white",
+    font_size   = 20,
+    font_family = "Times New Roman",
+    font_weight = "bold",
+    width       = 5
+  )
+  plt.margins(0.2)
+  plt.show()
+  
+  context = {
+    'aantalnodes' : aantalnodes,
+    'aantaledges' : aantaledges
+  }
+  return render(request, 'rakken/rakkengraph.html', context)
