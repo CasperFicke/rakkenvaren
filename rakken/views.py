@@ -79,7 +79,6 @@ def show_waypoint(request, waypoint_uuid):
   try:
     waypoint = Waypoint.objects.get(uuid=waypoint_uuid)
     title    = 'waypoint: ' + waypoint.naam
-    tooltip  = 'Click voor meer info'
     loca     = waypoint.latitude, waypoint.longitude
     # map setup
     m = folium.Map(
@@ -105,7 +104,7 @@ def show_waypoint(request, waypoint_uuid):
     context  = {
       'title'    : title,
       'waypoint' : waypoint,
-      'm': m
+      'm'        : m
     }
     return render(request, 'rakken/show_waypoint.html', context)
   except:
@@ -449,71 +448,282 @@ def rakscorekaart(request):
       icon     = folium.Icon(color=mc, prefix='fa', icon=mi)
     ).add_to(waypointMarkersLayer)
 
-  # add polyline 24uurs
   rakscore_list = RakScore.objects.all()
+  # add polyline 24uurs
   for rakscore in rakscore_list:
-    # set linetype
-    if str(rakscore.rak.type) == 'Baan-rak':
-      dashed = '0'
-    else:
-      dashed = '10'
-    # set rak color
-    if str(rakscore.score) == 'slecht' or str(rakscore.score) == 'matig':
-      color  = 'red'
-    else:
-      color  = 'green'
-    # set rak popup
-    popup = folium.Popup(
-      f"{rakscore.waypoint1} to {rakscore.waypoint2}, distance: {rakscore.rak.afstand} nm, bearing: {rakscore.bearing} ° TWA: {rakscore.twa} ° rakscore {rakscore.score}",
-      min_width = 150,
-      max_width = 300)
-    # add line to layer
-    plugins.PolyLineOffset([(rakscore.waypoint1.latitude, rakscore.waypoint1.longitude), (rakscore.waypoint2.latitude, rakscore.waypoint2.longitude)],
-      popup  = popup,
-      color  = color,
-      weight = 2,
-      offset = 2,
-      ).add_to(kz24uursLayer)
-    # add boatmarker
-    boot_pos = get_bootje_coords(rakscore.waypoint1.latitude, rakscore.waypoint1.longitude, rakscore.waypoint2.latitude, rakscore.waypoint2.longitude)
-    plugins.BoatMarker(
-      boot_pos,
-      heading      = rakscore.bearing,
-      wind_heading = rakscore.weer.windrichting,
-      wind_speed   = rakscore.weer.windkracht,
-      color        = color
-      ).add_to(kz24uursLayer)
+    if rakscore.rak.evenement_id == 1:
+      # set linetype
+      if str(rakscore.rak.type) == 'Baan-rak':
+        dashed = '0'
+      else:
+        dashed = '10'
+      # set rak color
+      if str(rakscore.score) == 'slecht':
+        color  = 'red'
+      elif str(rakscore.score) == 'matig':
+        color  = 'orange'
+      elif str(rakscore.score) == 'goed':
+        color  = 'green'
+      elif str(rakscore.score) == 'zeer goed':
+        color  = 'pink'
+      elif str(rakscore.score) == 'redelijk':
+        color  = 'purple'
+      else:
+        color  = 'white'
+      # set rak popup
+      popup = folium.Popup(
+        f"{rakscore.waypoint1} to {rakscore.waypoint2}, distance: {rakscore.rak.afstand} nm, bearing: {rakscore.bearing} ° TWA: {rakscore.twa} ° rakscore {rakscore.score}",
+        min_width = 150,
+        max_width = 300)
+      # add line to layer
+      plugins.PolyLineOffset([(rakscore.waypoint1.latitude, rakscore.waypoint1.longitude), (rakscore.waypoint2.latitude, rakscore.waypoint2.longitude)],
+        popup  = popup,
+        color  = color,
+        weight = 2,
+        offset = 2,
+        ).add_to(kz24uursLayer)
+      # add boatmarker
+      boot_pos = get_bootje_coords(rakscore.waypoint1.latitude, rakscore.waypoint1.longitude, rakscore.waypoint2.latitude, rakscore.waypoint2.longitude)
+      plugins.BoatMarker(
+        boot_pos,
+        heading      = rakscore.bearing,
+        wind_heading = rakscore.weer.windrichting,
+        wind_speed   = rakscore.weer.windkracht,
+        color        = color
+        ).add_to(kz24uursLayer)
 
   # add polyline 8uurs
-  rakscore_list = RakScore.objects.all()
   for rakscore in rakscore_list:
-    # set rak color
-    if str(rakscore.rak.type) == 'Baan-rak':
-      color = '#080080'
-      dashed = '0'
+    if rakscore.rak.evenement_id == 2:
+      # set rak color
+      if str(rakscore.rak.type) == 'Baan-rak':
+        dashed = '0'
+      else:
+        dashed = '10'
+      # set rak color
+      if str(rakscore.score) == 'slecht':
+        color  = 'red'
+      elif str(rakscore.score) == 'matig':
+        color  = 'orange'
+      elif str(rakscore.score) == 'goed':
+        color  = 'green'
+      elif str(rakscore.score) == 'zeer goed':
+        color  = 'pink'
+      elif str(rakscore.score) == 'redelijk':
+        color  = 'purple'
+      else:
+        color  = 'white'
+      # set rak popup
+      popup = folium.Popup(
+        f"{rakscore.waypoint1} to {rakscore.waypoint2}, distance: {rakscore.rak.afstand} nm, bearing: {rakscore.bearing} ° TWA: {rakscore.twa} ° rakscore {rakscore.score}",
+        min_width = 150,
+        max_width = 300)
+      # add line to layer
+      plugins.PolyLineOffset([(rakscore.waypoint1.latitude, rakscore.waypoint1.longitude), (rakscore.waypoint2.latitude, rakscore.waypoint2.longitude)],
+        popup  = popup,
+        color  = color,
+        weight = 2,
+        offset = 2,
+        ).add_to(kk8uursLayer)
+      # add boatmarker
+      boot_pos = get_bootje_coords(rakscore.waypoint1.latitude, rakscore.waypoint1.longitude, rakscore.waypoint2.latitude, rakscore.waypoint2.longitude)
+      plugins.BoatMarker(
+        boot_pos,
+        heading      = rakscore.bearing,
+        wind_heading = rakscore.weer.windrichting,
+        wind_speed   = rakscore.weer.windkracht,
+        color        = color
+        ).add_to(kk8uursLayer)
+
+  # add fullscreen button to the map
+  plugins.Fullscreen().add_to(map)
+  # render map as html
+  map = map._repr_html_()
+  context['map'] = map
+  return render(request, 'rakken/rakscorekaart.html', context)
+
+# rakscorekaart 8uurs
+def rakscorekaart8uurs(request):
+  title = 'rakscorekaart 8uurs'
+  weer  = Weer.objects.first()
+  context = {
+    'title' : title,
+    'weer'  : weer
+  }
+  tooltip = 'Click voor meer info'
+  map = folium.Map(
+    location   = [52.54, 5.2],
+    tiles      = 'openstreetmap',
+    zoom_start = 11
+  )
+  folium.TileLayer('openstreetmap').add_to(map)
+  folium.TileLayer('https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png',
+    name='openseamap',
+    attr='openseamap'
+  ).add_to(map)
+
+  # add layer for waypoint markers
+  waypointMarkersLayer = folium.FeatureGroup(name="Waypoints", show=False).add_to(map)
+  # add layers fot scores
+  slechtLayer   = folium.FeatureGroup(name="slecht - 0 < twa < 45", show=False).add_to(map)
+  matigLayer    = folium.FeatureGroup(name="matig - 45 < twa > 100", show=False).add_to(map)
+  goedLayer     = folium.FeatureGroup(name="goed - 100 < twa > 140").add_to(map)
+  zeergoedLayer = folium.FeatureGroup(name="zeer goed - 140 < twa > 160").add_to(map)
+  redelijkLayer = folium.FeatureGroup(name="redelijk - 160 < twa > 180").add_to(map)
+  folium.LayerControl().add_to(map)
+  
+  # Add waypoints uit de db
+  waypoints            = Waypoint.objects.all()
+  context['waypoints'] = waypoints
+  df = pd.DataFrame(list(waypoints.values()))
+  # print(df)
+  for (index, rows) in df.iterrows():
+    lat     = rows.loc['latitude']
+    lng     = rows.loc['longitude']
+    type    = rows.loc['type_id']
+    tooltip = rows.loc['naam']
+    popup   = rows.loc['omschrijving']
+    #popup = str(rows.loc['naam']+ ' ' + rows.loc['omschrijving']).title()
+    if type > 1:
+      mc = 'green'
+      mi = 'leaf'
     else:
-      color = 'green'
-      dashed = '10'
-    # set rak popup
-    popup = folium.Popup(
-      f'{rakscore.rak.afstand} nm, van {rakscore.rak.waypoint1} naar {rakscore.rak.waypoint2}:{rakscore.rak.bearing12} °, van {rakscore.rak.waypoint2} naar {rakscore.rak.waypoint1}: {rakscore.rak.bearing21} °',
-      min_width=150,
-      max_width=300)
-    # add line to layer
-    folium.PolyLine([(rakscore.rak.waypoint1.latitude, rakscore.rak.waypoint1.longitude), (rakscore.rak.waypoint2.latitude, rakscore.rak.waypoint2.longitude)],
-      popup      = popup,
-      color      = color,
-      dash_array = dashed,
-      weight     = 2,
-      ).add_to(kk8uursLayer)
-    # add boatmarker
-    plugins.BoatMarker(
-      (rakscore.waypoint1.latitude, rakscore.waypoint1.longitude),
-      heading      = rakscore.rak.bearing12,
-      wind_heading = rakscore.weer.windrichting,
-      wind_speed   = rakscore.weer.windkracht,
-      color="#8f8"
-      ).add_to(kk8uursLayer)
+      mc = 'red'
+      mi = 'bolt'
+    folium.Marker(
+      location = [lat, lng],
+      tooltip  = tooltip,
+      popup    = popup,
+      icon     = folium.Icon(color=mc, prefix='fa', icon=mi)
+    ).add_to(waypointMarkersLayer)
+  
+  rakscore_list = RakScore.objects.all()
+  # add polyline 8uurs
+  for rakscore in rakscore_list:
+    if rakscore.rak.evenement_id == 2:
+      # set rak color
+      if str(rakscore.rak.type) == 'Baan-rak':
+        dashed = '0'
+      else:
+        dashed = '10'
+      # set rak color
+      if str(rakscore.score) == 'slecht':
+        color  = 'red'
+        # set rak popup
+        popup = folium.Popup(
+          f"{rakscore.waypoint1} to {rakscore.waypoint2}, distance: {rakscore.rak.afstand} nm, bearing: {rakscore.bearing} ° TWA: {rakscore.twa} ° rakscore {rakscore.score}",
+          min_width = 150,
+          max_width = 300)
+        # add line to layer
+        plugins.PolyLineOffset([(rakscore.waypoint1.latitude, rakscore.waypoint1.longitude), (rakscore.waypoint2.latitude, rakscore.waypoint2.longitude)],
+          popup  = popup,
+          color  = color,
+          weight = 2,
+          offset = 2,
+          ).add_to(slechtLayer)
+        # add boatmarker
+        boot_pos = get_bootje_coords(rakscore.waypoint1.latitude, rakscore.waypoint1.longitude, rakscore.waypoint2.latitude, rakscore.waypoint2.longitude)
+        plugins.BoatMarker(
+          boot_pos,
+          heading      = rakscore.bearing,
+          wind_heading = rakscore.weer.windrichting,
+          wind_speed   = rakscore.weer.windkracht,
+          color        = color
+          ).add_to(slechtLayer)
+      elif str(rakscore.score) == 'matig':
+        color  = 'orange'
+        # set rak popup
+        popup = folium.Popup(
+          f"{rakscore.waypoint1} to {rakscore.waypoint2}, distance: {rakscore.rak.afstand} nm, bearing: {rakscore.bearing} ° TWA: {rakscore.twa} ° rakscore {rakscore.score}",
+          min_width = 150,
+          max_width = 300)
+        # add line to layer
+        plugins.PolyLineOffset([(rakscore.waypoint1.latitude, rakscore.waypoint1.longitude), (rakscore.waypoint2.latitude, rakscore.waypoint2.longitude)],
+          popup  = popup,
+          color  = color,
+          weight = 2,
+          offset = 2,
+          ).add_to(matigLayer)
+        # add boatmarker
+        boot_pos = get_bootje_coords(rakscore.waypoint1.latitude, rakscore.waypoint1.longitude, rakscore.waypoint2.latitude, rakscore.waypoint2.longitude)
+        plugins.BoatMarker(
+          boot_pos,
+          heading      = rakscore.bearing,
+          wind_heading = rakscore.weer.windrichting,
+          wind_speed   = rakscore.weer.windkracht,
+          color        = color
+          ).add_to(matigLayer)
+      elif str(rakscore.score) == 'goed':
+        color  = 'green'
+        # set rak popup
+        popup = folium.Popup(
+          f"{rakscore.waypoint1} to {rakscore.waypoint2}, distance: {rakscore.rak.afstand} nm, bearing: {rakscore.bearing} ° TWA: {rakscore.twa} ° rakscore {rakscore.score}",
+          min_width = 150,
+          max_width = 300)
+        # add line to layer
+        plugins.PolyLineOffset([(rakscore.waypoint1.latitude, rakscore.waypoint1.longitude), (rakscore.waypoint2.latitude, rakscore.waypoint2.longitude)],
+          popup  = popup,
+          color  = color,
+          weight = 2,
+          offset = 2,
+          ).add_to(goedLayer)
+        # add boatmarker
+        boot_pos = get_bootje_coords(rakscore.waypoint1.latitude, rakscore.waypoint1.longitude, rakscore.waypoint2.latitude, rakscore.waypoint2.longitude)
+        plugins.BoatMarker(
+          boot_pos,
+          heading      = rakscore.bearing,
+          wind_heading = rakscore.weer.windrichting,
+          wind_speed   = rakscore.weer.windkracht,
+          color        = color
+          ).add_to(goedLayer)
+      elif str(rakscore.score) == 'zeer goed':
+        color  = 'purple'
+        # set rak popup
+        popup = folium.Popup(
+          f"{rakscore.waypoint1} to {rakscore.waypoint2}, distance: {rakscore.rak.afstand} nm, bearing: {rakscore.bearing} ° TWA: {rakscore.twa} ° rakscore {rakscore.score}",
+          min_width = 150,
+          max_width = 300)
+        # add line to layer
+        plugins.PolyLineOffset([(rakscore.waypoint1.latitude, rakscore.waypoint1.longitude), (rakscore.waypoint2.latitude, rakscore.waypoint2.longitude)],
+          popup  = popup,
+          color  = color,
+          weight = 2,
+          offset = 2,
+          ).add_to(zeergoedLayer)
+        # add boatmarker
+        boot_pos = get_bootje_coords(rakscore.waypoint1.latitude, rakscore.waypoint1.longitude, rakscore.waypoint2.latitude, rakscore.waypoint2.longitude)
+        plugins.BoatMarker(
+          boot_pos,
+          heading      = rakscore.bearing,
+          wind_heading = rakscore.weer.windrichting,
+          wind_speed   = rakscore.weer.windkracht,
+          color        = color
+          ).add_to(zeergoedLayer)
+      elif str(rakscore.score) == 'redelijk':
+        color  = 'blue'
+        # set rak popup
+        popup = folium.Popup(
+          f"{rakscore.waypoint1} to {rakscore.waypoint2}, distance: {rakscore.rak.afstand} nm, bearing: {rakscore.bearing} ° TWA: {rakscore.twa} ° rakscore {rakscore.score}",
+          min_width = 150,
+          max_width = 300)
+        # add line to layer
+        plugins.PolyLineOffset([(rakscore.waypoint1.latitude, rakscore.waypoint1.longitude), (rakscore.waypoint2.latitude, rakscore.waypoint2.longitude)],
+          popup  = popup,
+          color  = color,
+          weight = 2,
+          offset = 2,
+          ).add_to(redelijkLayer)
+        # add boatmarker
+        boot_pos = get_bootje_coords(rakscore.waypoint1.latitude, rakscore.waypoint1.longitude, rakscore.waypoint2.latitude, rakscore.waypoint2.longitude)
+        plugins.BoatMarker(
+          boot_pos,
+          heading      = rakscore.bearing,
+          wind_heading = rakscore.weer.windrichting,
+          wind_speed   = rakscore.weer.windkracht,
+          color        = color
+          ).add_to(redelijkLayer)
+      else:
+        color  = 'white'
 
   # add fullscreen button to the map
   plugins.Fullscreen().add_to(map)
@@ -537,8 +747,8 @@ def rakkengraph(request):
       usedwaypoints.append(rak.waypoint2)
   
   # define graph
-  G = nx.Graph()
-  G.clear()
+  G = nx.Graph(name="8 uurs")
+  #G.clear()
 
   # Add waypoints as nodes
   for waypoint in usedwaypoints:

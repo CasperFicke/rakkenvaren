@@ -40,4 +40,5 @@ urlpatterns = [
   # Rak scores
   path('rakken/rakscore/'      , views.all_rakscore, name="all-rakscore"),
   path('rakken/rakscorekaart/' , views.rakscorekaart, name="rakscorekaart"),
+  path('rakken/rakscorekaart/8uurs' , views.rakscorekaart8uurs, name="rakscorekaart8uurs"),
 ]
