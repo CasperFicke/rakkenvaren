@@ -38,7 +38,9 @@ urlpatterns = [
   path('rakken/<int:pk>/update' , RakUpdateView.as_view(), name="update-rak"),
   path('rakken/<int:pk>/delete' , RakDeleteView.as_view(), name="delete-rak"),
   # Rak scores
-  path('rakken/rakscore/'      , views.all_rakscore, name="all-rakscore"),
-  path('rakken/rakscorekaart/' , views.rakscorekaart, name="rakscorekaart"),
+  path('rakken/rakscore/'           , views.all_rakscore, name="all-rakscore"),
+  path('rakken/rakscore/csv/'       , views.csv_rakscores, name="csv_rakscores"),
+  path('rakken/rakscore/pdf/'       , views.pdf_rakscores, name="pdf_rakscores"),
+  path('rakken/rakscorekaart/'      , views.rakscorekaart, name="rakscorekaart"),
   path('rakken/rakscorekaart/8uurs' , views.rakscorekaart8uurs, name="rakscorekaart8uurs"),
 ]

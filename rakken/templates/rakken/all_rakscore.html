@@ -27,7 +27,6 @@
           <th scope="col">Bearing</th>
           <th scope="col">TWA</th>
           <th scope="col">Score</th>
-          
         </tr>
       </thead>
       <tbody>
@@ -44,12 +43,13 @@
               <td class="{{ rakscore.color }}">{{ rakscore.bearing }}</td>
               <td class="{{ rakscore.color }}">{{ rakscore.twa }}</td>
               <td class="{{ rakscore.color }}">{{ rakscore.score }}</td>
-              
             </tr>
           {% endfor %}  
         {% endif %}
       </tbody>
     </table>
+    <a href="{% url 'rakken:csv_rakscores' %}" class="btn btn-outline-secondary">Export to CSV <i class="fas fa-file-csv"></i></a>
+    <a href="{% url 'rakken:pdf_rakscores' %}" class="btn btn-outline-secondary">Export to PDF <i class="fas fa-file-pdf"></i></a>
     {% include 'includes/pagina_nav.html' %}
   </div>
 {% endblock content %}

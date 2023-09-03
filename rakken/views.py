@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.core.paginator import Page, Paginator
-from django.http import HttpResponse, HttpResponseRedirect, Http404, JsonResponse
+from django.http import HttpResponse, HttpResponseRedirect, Http404, JsonResponse, FileResponse
 from django.core import serializers
 
 from geopy.distance  import geodesic
@@ -20,6 +20,12 @@ matplotlib.use('agg')
 import io
 from io import StringIO
 import urllib, base64
+import csv
+
+# pdf creation with reportlab
+from reportlab.pdfgen import canvas
+from reportlab.lib.units import cm
+from reportlab.lib.pagesizes import A4
 
 geod = Geodesic.WGS84
 
@@ -29,8 +35,11 @@ import pandas as pd
 # import networkx (network analysis)
 import networkx as nx
 
+# import folium kaarten
 import folium
 from folium import plugins
+
+from datetime import datetime, timedelta, date
 
 # local
 from .models import Evenement, RakScore, Weer, Waypoint, Rak
@@ -395,6 +404,60 @@ def all_rakscore(request):
     'page_count'    : page_count
   }
   return render(request, 'rakken/all_rakscore.html', context)
+
+# export rakscores to CSV
+def csv_rakscores(request):
+  response= HttpResponse(content_type='text/csv')
+  response['Content-Disposition'] = 'attachment; filename=RakscoreList_' + str(date.today()) + '.csv'
+  # create CSV writer
+  writer=csv.writer(response)
+  # Select all rakscors to export
+  rakscore_list = RakScore.objects.all()
+  # create first row with column headings
+  writer.writerow(['Evenement', 'Rak-type', 'Waypoint1', 'Waypoint2', 'Lengte', 'Bearing', 'Windrichting', 'TWA', 'score'])
+  # loop thru and output
+  for rakscore in rakscore_list:
+    writer.writerow([
+      rakscore.rak.evenement,
+      rakscore.rak.type,
+      rakscore.waypoint1,
+      rakscore.waypoint2,
+      rakscore.rak.lengte,
+      rakscore.bearing,
+      rakscore.weer.windrichting,
+      rakscore.twa,
+      rakscore.score
+    ])
+  return response
+
+# export rakscores to PDF
+def pdf_rakscores(request):
+  # Create a file-like buffer to receive PDF data.
+  buffer = io.BytesIO()
+  # Create the PDF object, using the buffer as its "file."
+  p = canvas.Canvas(buffer, pagesize=A4, bottomup=0)
+  # Create a textobject
+  texobj = p.beginText()
+  texobj.setTextOrigin(cm, cm)
+  texobj.setFont("Helvetica", 14)
+
+  rakscore_list = RakScore.objects.all()
+  # create empty list
+  lines = []
+  # loop thru to build contentlist
+  for rakscore in rakscore_list:
+    lines.append('van ' + str(rakscore.waypoint1) + ' naar ' + str(rakscore.waypoint2) + ' is koers ' + str(rakscore.bearing)),
+    lines.append('  ')
+  # loop thru and output
+  for line in lines:
+    texobj.textLine(line)
+  # finish pdf
+  p.drawText(texobj)
+  p.showPage()
+  p.save()
+  buffer.seek(0)
+  # return pdf
+  return FileResponse(buffer, as_attachment=True, filename='RakscoreList_' + str(date.today()) + '.pdf')
 
 # rakscorekaart
 def rakscorekaart(request):
