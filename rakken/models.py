@@ -31,6 +31,7 @@ class Weer(TimeStampedModel,ActivatorModel,models.Model):
 # Evenement model
 class Evenement(TimeStampedModel, ActivatorModel, models.Model):
   class Meta:
+    ordering            = ['naam']
     verbose_name        = 'Evenement'
     verbose_name_plural = 'Evenementen'
   # attributes
@@ -47,6 +48,7 @@ class Evenement(TimeStampedModel, ActivatorModel, models.Model):
 # WaypointType model
 class WaypointType(TimeStampedModel,ActivatorModel,models.Model):
   class Meta:
+    ordering            = ['type']
     verbose_name        = 'waypoint-type'
     verbose_name_plural = 'waypoint types'
   # attributes
@@ -62,6 +64,8 @@ class WaypointType(TimeStampedModel,ActivatorModel,models.Model):
 # Waypointmodel
 class Waypoint(TimeStampedModel,ActivatorModel,models.Model):
   class Meta:
+    ordering            = ['naam']
+    verbose_name        = 'waypoint'
     verbose_name_plural = 'waypoints'
   # attributes
   naam         = models.CharField('Waypoint naam', max_length=255, help_text='Naam van het waypoint', unique=True)
@@ -84,6 +88,7 @@ class Waypoint(TimeStampedModel,ActivatorModel,models.Model):
 # Raktype model
 class RakType(TimeStampedModel,ActivatorModel,models.Model):
   class Meta:
+    ordering            = ['type']
     verbose_name        = 'rak type'
     verbose_name_plural = 'rak types'
   # attributes
@@ -105,6 +110,8 @@ class Rak(TimeStampedModel,ActivatorModel,models.Model):
   :model:`rakken.Waypoints1 en -2` and :model:`rakken.type`.
   '''
   class Meta:
+    ordering            = ['evenement', 'type', 'waypoint1']
+    verbose_name        = 'rak'
     verbose_name_plural = 'rakken'
   # attributes
   lengte    = models.FloatField('Raklengte volgens organisatie', blank=True, null=True)
@@ -150,6 +157,11 @@ class Rak(TimeStampedModel,ActivatorModel,models.Model):
 
 # Rakscore-model
 class RakScore(TimeStampedModel,ActivatorModel,models.Model):
+  class Meta:
+    ordering            = ['evenement', 'type', 'waypoint1']
+    verbose_name        = 'rakscore'
+    verbose_name_plural = 'rakscores'
+  # attributes
   waypoint1 = models.ForeignKey(Waypoint, blank=True, null=True, on_delete=models.CASCADE, related_name='rakscoreswp1')
   waypoint2 = models.ForeignKey(Waypoint, blank=True, null=True, on_delete=models.CASCADE, related_name='rakscoreswp2')
   bearing   = models.FloatField('bearing', blank=True, null=True)
@@ -172,6 +184,11 @@ class RakScore(TimeStampedModel,ActivatorModel,models.Model):
 
 # Baan model
 class Baan(TimeStampedModel,ActivatorModel,models.Model):
+  class Meta:
+    ordering            = ['naam']
+    verbose_name        = 'baan'
+    verbose_name_plural = 'banen'
+  # attributes
   naam         = models.CharField('Naam van de baan', max_length=100)
   beschrijving = models.TextField('Beschrijving', blank=True)
   # relaties

@@ -100,15 +100,30 @@ def show_waypoint(request, waypoint_uuid):
       attr='openseamap'
     ).add_to(m)
 
+    # custom icon    
+    url          = "https://leafletjs.com/examples/custom-icons/{}".format
+    icon_image   = url("leaf-red.png")
+    shadow_image = url("leaf-shadow.png")
+    icon = folium.CustomIcon(
+      icon_image,
+      icon_size     = (38, 95),
+      icon_anchor   = (22, 94),
+      shadow_image  = shadow_image,
+      shadow_size   = (50, 64),
+      shadow_anchor = (4, 62),
+      popup_anchor  = (-3, -76),
+    )
     # add location marker
     folium.Marker(
-      loca,
-      tooltip = waypoint.naam,
-      popup   = waypoint.omschrijving,
-      icon    = folium.Icon(color='blue')
+      location = loca,
+      icon     = icon,
+      tooltip  = waypoint.naam,
+      popup    = waypoint.omschrijving,
     ).add_to(m)
-    folium.LayerControl().add_to(m)
 
+    # add layercontrol to the map
+    folium.LayerControl().add_to(m)
+    # convert map fir html representation
     m = m._repr_html_()
     context  = {
       'title'    : title,
@@ -815,9 +830,7 @@ def rakkengraph(request):
 
   # Add waypoints as nodes
   for waypoint in usedwaypoints:
-    nodenaam = waypoint
-    G.add_node(nodenaam)
-    nx.set_node_attributes(G, {nodenaam: "red"}, name="color")
+    G.add_node(waypoint.naam, type=waypoint.type.type)
   
   # Add rakken as edges
   dfrakken = pd.DataFrame(list(rakken.values()))
@@ -825,8 +838,12 @@ def rakkengraph(request):
   for (index, rows) in dfrakken.iterrows():
     wpa = Waypoint.objects.filter(pk=rows.loc['waypoint1_id'])
     wpb = Waypoint.objects.filter(pk=rows.loc['waypoint2_id'])
-    G.add_edge(wpa[0], wpb[0])
+    G.add_edge(wpa[0].naam, wpb[0].naam, lengte=rows.loc['lengte'])
 
+  #print(G.nodes(data=True))
+  #print(G.edges(data=True))
+  #print(G.edges["Hoorn", "SH2"])
+  #print(G.graph)
   aantalnodes = G.number_of_nodes()
   aantaledges = G.number_of_edges()
 
@@ -854,6 +871,7 @@ def rakkengraph(request):
   context = {
     'title'       : title,
     'data'        : uri,
+    'graphnaam'   : G.name,
     'aantalnodes' : aantalnodes,
     'aantaledges' : aantaledges
   }
