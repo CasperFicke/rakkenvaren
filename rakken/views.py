@@ -96,8 +96,8 @@ def show_waypoint(request, waypoint_uuid):
       zoom_start = 12
     )
     folium.TileLayer('https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png',
-      name='openseamap',
-      attr='openseamap'
+      name = 'openseamap',
+      attr = 'openseamap'
     ).add_to(m)
 
     # custom icon    
@@ -105,13 +105,13 @@ def show_waypoint(request, waypoint_uuid):
     icon_image   = url("leaf-red.png")
     shadow_image = url("leaf-shadow.png")
     icon = folium.CustomIcon(
-      icon_image,
-      icon_size     = (38, 95),
-      icon_anchor   = (22, 94),
-      shadow_image  = shadow_image,
-      shadow_size   = (50, 64),
-      shadow_anchor = (4, 62),
-      popup_anchor  = (-3, -76),
+      icon_image,                   # image of the icon
+      shadow_image  = shadow_image, # image of the shadow
+      icon_size     = (38, 95),     # size of the icon
+      shadow_size   = (50, 64),     # size of the shadow
+      icon_anchor   = (22, 94),     # point of the icon which will correspond to marker's location
+      shadow_anchor = (4, 62),      # the same for the shadow
+      popup_anchor  = (-3, -76),    # point from which the popup should open relative to the iconAnchor
     )
     # add location marker
     folium.Marker(
